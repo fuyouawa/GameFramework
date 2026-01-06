@@ -4,6 +4,7 @@
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<Nullable>disable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+ 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
 		<PostBuildEvent>
 			copy "$(MSBuildProjectName).dll" "$(SolutionDir)..\..\Assets\Plugins\UnityGameFramework\Libraries\$(MSBuildProjectName).dll"
