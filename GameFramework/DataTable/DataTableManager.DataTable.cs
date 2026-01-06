@@ -17,22 +17,26 @@ namespace GameFramework.DataTable
         /// 数据表。
         /// </summary>
         /// <typeparam name="T">数据表行的类型。</typeparam>
-        private sealed class DataTable<T> : DataTableBase, IDataTable<T> where T : class, IDataRow, new()
+        private sealed class DataTable<T> : DataTableBase, IDataTable<T>
         {
             private readonly Dictionary<int, T> m_DataSet;
             private T m_MinIdDataRow;
             private T m_MaxIdDataRow;
 
+            private readonly IDataRowHelper<T> m_DataRowHelper;
+
             /// <summary>
             /// 初始化数据表的新实例。
             /// </summary>
             /// <param name="name">数据表名称。</param>
-            public DataTable(string name)
+            /// <param name="dataRowHelper">数据表行辅助器。</param>
+            public DataTable(string name, IDataRowHelper<T> dataRowHelper)
                 : base(name)
             {
                 m_DataSet = new Dictionary<int, T>();
-                m_MinIdDataRow = null;
-                m_MaxIdDataRow = null;
+                m_DataRowHelper = dataRowHelper;
+                m_MinIdDataRow = default;
+                m_MaxIdDataRow = default;
             }
 
             /// <summary>
@@ -132,13 +136,13 @@ namespace GameFramework.DataTable
             /// <returns>数据表行。</returns>
             public T GetDataRow(int id)
             {
-                T dataRow = null;
+                T dataRow = default;
                 if (m_DataSet.TryGetValue(id, out dataRow))
                 {
                     return dataRow;
                 }
 
-                return null;
+                return default;
             }
 
             /// <summary>
@@ -162,7 +166,7 @@ namespace GameFramework.DataTable
                     }
                 }
 
-                return null;
+                return default;
             }
 
             /// <summary>
@@ -374,8 +378,7 @@ namespace GameFramework.DataTable
             {
                 try
                 {
-                    T dataRow = new T();
-                    if (!dataRow.ParseDataRow(dataRowString, userData))
+                    if (!m_DataRowHelper.ParseDataRow(out T dataRow, dataRowString, userData))
                     {
                         return false;
                     }
@@ -406,8 +409,7 @@ namespace GameFramework.DataTable
             {
                 try
                 {
-                    T dataRow = new T();
-                    if (!dataRow.ParseDataRow(dataRowBytes, startIndex, length, userData))
+                    if (!m_DataRowHelper.ParseDataRow(out T dataRow, dataRowBytes, startIndex, length, userData))
                     {
                         return false;
                     }
@@ -443,18 +445,18 @@ namespace GameFramework.DataTable
                     return false;
                 }
 
-                if (m_MinIdDataRow != null && m_MinIdDataRow.Id == id || m_MaxIdDataRow != null && m_MaxIdDataRow.Id == id)
+                if (m_MinIdDataRow != null && m_DataRowHelper.GetId(m_MinIdDataRow) == id || m_MaxIdDataRow != null && m_DataRowHelper.GetId(m_MaxIdDataRow) == id)
                 {
-                    m_MinIdDataRow = null;
-                    m_MaxIdDataRow = null;
+                    m_MinIdDataRow = default;
+                    m_MaxIdDataRow = default;
                     foreach (KeyValuePair<int, T> dataRow in m_DataSet)
                     {
-                        if (m_MinIdDataRow == null || m_MinIdDataRow.Id > dataRow.Key)
+                        if (m_MinIdDataRow == null || m_DataRowHelper.GetId(m_MinIdDataRow) > dataRow.Key)
                         {
                             m_MinIdDataRow = dataRow.Value;
                         }
 
-                        if (m_MaxIdDataRow == null || m_MaxIdDataRow.Id < dataRow.Key)
+                        if (m_MaxIdDataRow == null || m_DataRowHelper.GetId(m_MaxIdDataRow) < dataRow.Key)
                         {
                             m_MaxIdDataRow = dataRow.Value;
                         }
@@ -470,8 +472,8 @@ namespace GameFramework.DataTable
             public override void RemoveAllDataRows()
             {
                 m_DataSet.Clear();
-                m_MinIdDataRow = null;
-                m_MaxIdDataRow = null;
+                m_MinIdDataRow = default;
+                m_MaxIdDataRow = default;
             }
 
             /// <summary>
@@ -502,19 +504,20 @@ namespace GameFramework.DataTable
 
             private void InternalAddDataRow(T dataRow)
             {
-                if (m_DataSet.ContainsKey(dataRow.Id))
+                int dataRowId = m_DataRowHelper.GetId(dataRow);
+                if (m_DataSet.ContainsKey(dataRowId))
                 {
-                    throw new GameFrameworkException(Utility.Text.Format("Already exist '{0}' in data table '{1}'.", dataRow.Id, new TypeNamePair(typeof(T), Name)));
+                    throw new GameFrameworkException(Utility.Text.Format("Already exist '{0}' in data table '{1}'.", dataRowId, new TypeNamePair(typeof(T), Name)));
                 }
 
-                m_DataSet.Add(dataRow.Id, dataRow);
+                m_DataSet.Add(dataRowId, dataRow);
 
-                if (m_MinIdDataRow == null || m_MinIdDataRow.Id > dataRow.Id)
+                if (m_MinIdDataRow == null || m_DataRowHelper.GetId(m_MinIdDataRow) > dataRowId)
                 {
                     m_MinIdDataRow = dataRow;
                 }
 
-                if (m_MaxIdDataRow == null || m_MaxIdDataRow.Id < dataRow.Id)
+                if (m_MaxIdDataRow == null || m_DataRowHelper.GetId(m_MaxIdDataRow) < dataRowId)
                 {
                     m_MaxIdDataRow = dataRow;
                 }

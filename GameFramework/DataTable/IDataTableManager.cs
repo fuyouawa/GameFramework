@@ -51,6 +51,12 @@ namespace GameFramework.DataTable
         void SetDataTableHelper(IDataTableHelper dataTableHelper);
 
         /// <summary>
+        /// 设置数据表行辅助器解析器。
+        /// </summary>
+        /// <param name="dataRowHelperResolver">数据表行辅助器解析器。</param>
+        void SetDataRowHelperResolver(IDataRowHelperResolver dataRowHelperResolver);
+
+        /// <summary>
         /// 确保二进制流缓存分配足够大小的内存并缓存。
         /// </summary>
         /// <param name="ensureSize">要确保二进制流缓存分配内存的大小。</param>
@@ -66,7 +72,7 @@ namespace GameFramework.DataTable
         /// </summary>
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <returns>是否存在数据表。</returns>
-        bool HasDataTable<T>() where T : IDataRow;
+        bool HasDataTable<T>();
 
         /// <summary>
         /// 是否存在数据表。
@@ -81,7 +87,7 @@ namespace GameFramework.DataTable
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <param name="name">数据表名称。</param>
         /// <returns>是否存在数据表。</returns>
-        bool HasDataTable<T>(string name) where T : IDataRow;
+        bool HasDataTable<T>(string name);
 
         /// <summary>
         /// 是否存在数据表。
@@ -96,7 +102,7 @@ namespace GameFramework.DataTable
         /// </summary>
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <returns>要获取的数据表。</returns>
-        IDataTable<T> GetDataTable<T>() where T : IDataRow;
+        IDataTable<T> GetDataTable<T>();
 
         /// <summary>
         /// 获取数据表。
@@ -111,7 +117,7 @@ namespace GameFramework.DataTable
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <param name="name">数据表名称。</param>
         /// <returns>要获取的数据表。</returns>
-        IDataTable<T> GetDataTable<T>(string name) where T : IDataRow;
+        IDataTable<T> GetDataTable<T>(string name);
 
         /// <summary>
         /// 获取数据表。
@@ -138,7 +144,7 @@ namespace GameFramework.DataTable
         /// </summary>
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <returns>要创建的数据表。</returns>
-        IDataTable<T> CreateDataTable<T>() where T : class, IDataRow, new();
+        IDataTable<T> CreateDataTable<T>();
 
         /// <summary>
         /// 创建数据表。
@@ -153,7 +159,7 @@ namespace GameFramework.DataTable
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <param name="name">数据表名称。</param>
         /// <returns>要创建的数据表。</returns>
-        IDataTable<T> CreateDataTable<T>(string name) where T : class, IDataRow, new();
+        IDataTable<T> CreateDataTable<T>(string name);
 
         /// <summary>
         /// 创建数据表。
@@ -168,7 +174,7 @@ namespace GameFramework.DataTable
         /// </summary>
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <returns>是否销毁数据表成功。</returns>
-        bool DestroyDataTable<T>() where T : IDataRow;
+        bool DestroyDataTable<T>();
 
         /// <summary>
         /// 销毁数据表。
@@ -183,7 +189,7 @@ namespace GameFramework.DataTable
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <param name="name">数据表名称。</param>
         /// <returns>是否销毁数据表成功。</returns>
-        bool DestroyDataTable<T>(string name) where T : IDataRow;
+        bool DestroyDataTable<T>(string name);
 
         /// <summary>
         /// 销毁数据表。
@@ -199,7 +205,7 @@ namespace GameFramework.DataTable
         /// <typeparam name="T">数据表行的类型。</typeparam>
         /// <param name="dataTable">要销毁的数据表。</param>
         /// <returns>是否销毁数据表成功。</returns>
-        bool DestroyDataTable<T>(IDataTable<T> dataTable) where T : IDataRow;
+        bool DestroyDataTable<T>(IDataTable<T> dataTable);
 
         /// <summary>
         /// 销毁数据表。

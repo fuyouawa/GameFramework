@@ -14,7 +14,7 @@ namespace GameFramework.DataTable
     /// 数据表接口。
     /// </summary>
     /// <typeparam name="T">数据表行的类型。</typeparam>
-    public interface IDataTable<T> : IEnumerable<T> where T : IDataRow
+    public interface IDataTable<T> : IEnumerable<T>
     {
         /// <summary>
         /// 获取数据表名称。
