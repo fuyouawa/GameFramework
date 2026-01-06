@@ -36,6 +36,11 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(MSBuildProjectName).dll" "$(SolutionDir)..\..\Assets\Plugins\UnityGameFramework\Libraries\$(MSBuildProjectName).dll"
+copy "$(MSBuildProjectName).xml" "$(SolutionDir)..\..\Assets\Plugins\UnityGameFramework\Libraries\$(MSBuildProjectName).xml"
+copy "$(MSBuildProjectName).pdb" "$(SolutionDir)..\..\Assets\Plugins\UnityGameFramework\Libraries\$(MSBuildProjectName).pdb"</PostBuildEvent>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="System" />
